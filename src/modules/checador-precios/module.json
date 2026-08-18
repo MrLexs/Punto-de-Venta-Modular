@@ -1,0 +1,6 @@
+{
+  "nombre": "Checador de precios",
+  "descripcion": "Busca un producto y muestra su precio al instante.",
+  "icono": "ti-search",
+  "version": "1.0.0"
+}

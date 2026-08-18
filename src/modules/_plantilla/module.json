@@ -1,0 +1,6 @@
+{
+  "nombre": "Nombre visible del módulo",
+  "descripcion": "Una frase corta de qué hace, se muestra en la galería.",
+  "icono": "ti-puzzle",
+  "version": "1.0.0"
+}

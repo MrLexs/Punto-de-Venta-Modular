@@ -1,0 +1,13 @@
+-- Este archivo se ejecuta UNA sola vez, automaticamente, la primera vez
+-- que alguien activa este modulo desde la galeria.
+--
+-- Regla de oro: nombra tus tablas con el prefijo del modulo
+-- (ej. inv_productos, delivery_pedidos) para que nunca choquen con las
+-- tablas de otro modulo.
+--
+-- Ejemplo:
+-- CREATE TABLE IF NOT EXISTS plantilla_items (
+--   id INTEGER PRIMARY KEY AUTOINCREMENT,
+--   nombre TEXT NOT NULL,
+--   creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+-- );
