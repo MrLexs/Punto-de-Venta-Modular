@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # POS Modular
+=======
+-# POS Modular
+>>>>>>> b30d7753101704ac977b72e56676457bb217b3bc
 
 Cascarón de un punto de venta genérico para escritorio. La idea: un núcleo mínimo
 (login del negocio, base de datos local, galería) y módulos independientes que se
