@@ -1,0 +1,6 @@
+{
+  "nombre": "Almacen e Inventario",
+  "descripcion": "Control de stock de productos, entradas y alertas de faltantes.",
+  "icono": "ti-package",
+  "version": "1.0.0"
+}
