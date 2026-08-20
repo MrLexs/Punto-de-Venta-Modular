@@ -13,11 +13,12 @@ export default function ChecadorPrecios() {
   const [nuevoPrecio, setNuevoPrecio] = useState('');
 
   async function cargarProductos(texto) {
+    //Se consula ambas tablas, tanto el checado y la del almacen
     const filas = await window.pos.consultaDB(
-      'SELECT * FROM chp_productos WHERE nombre LIKE ? OR codigo LIKE ? ORDER BY nombre',
-      [`%${texto}%`, `%${texto}%`]
+      'SELECT codigo, nombre, precio FROM chp_productos WHERE nombre LIKE ? OR codigo LIKE ? UNION SELECT codigo_barras AS codigo, nombre, precio_venta AS precio FROM alm_productos WHERE nombre LIKE ? OR codigo_barras LIKE ? ORDER BY nombre',
+      [`%${texto}%`, `%${texto}%`, `%${texto}%`, `%${texto}%`]
     );
-    setProductos(filas);
+    setProductos(filas || []);
   }
 
   useEffect(() => {
@@ -84,11 +85,11 @@ export default function ChecadorPrecios() {
           </tr>
         </thead>
         <tbody>
-          {productos.map((p) => (
-            <tr key={p.id}>
+          {productos.map((p, index) => (
+            <tr key={p.codigo + '-' + index}>
               <td>{p.codigo}</td>
               <td>{p.nombre}</td>
-              <td>${p.precio.toFixed(2)}</td>
+              <td>${p.precio ? p.precio.toFixed(2) : '0.00'}</td>
             </tr>
           ))}
           {productos.length === 0 && (
