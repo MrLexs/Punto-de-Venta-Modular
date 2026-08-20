@@ -129,6 +129,7 @@ export default function ModuloAlmacen() {
         </form>
       )}
 
+
       {/* Tabla de Productos */}
       <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
         <thead>
