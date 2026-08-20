@@ -124,6 +124,7 @@ export default function App() {
             activos={activos}
             onActivar={manejarActivar}
             onDesactivar={manejarDesactivar}
+            esAdmin={usuario.es_admin}
           />
         )}
         {vista === 'administracion' && usuario.es_admin && <Administracion catalogo={catalogo} />}

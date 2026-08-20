@@ -1,6 +1,17 @@
 import React from 'react';
 
-export default function Galeria({ catalogo, activos, onActivar, onDesactivar }) {
+export default function Galeria({ catalogo, activos, onActivar, onDesactivar, esAdmin }) {
+  if (!esAdmin) {
+    return (
+      <div className="galeria" style={{ textAlign: 'center', marginTop: '40px' }}>
+        <h2>🚫 Acceso Restringido</h2>
+        <p className="texto-tenue">
+          Solo el Administrador tiene permisos para activar o desactivar módulos del sistema.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="galeria">
       <h1>Módulos disponibles</h1>
