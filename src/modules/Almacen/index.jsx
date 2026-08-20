@@ -149,18 +149,43 @@ export default function ModuloAlmacen() {
           ) : (
             productosFiltrados.map((prod) => {
               const estaFaltante = prod.stock_actual <= prod.stock_minimo;
+              const sinStock = prod.stock_actual === 0;
+
               return (
                 <tr key={prod.id} style={{ borderBottom: '1px solid #ddd' }}>
                   <td style={{ padding: '10px' }}>{prod.id}</td>
                   <td style={{ padding: '10px' }}>{prod.codigo_barras}</td>
                   <td style={{ padding: '10px' }}>{prod.nombre}</td>
-                  <td style={{ padding: '10px' }}>${prod.precio_venta}</td>
-                  <td style={{ padding: '10px', fontWeight: 'bold' }}>{prod.stock_actual}</td>
-                  <td style={{ padding: '10px' }}>
-                    {estaFaltante ? (
-                      <span style={{ color: 'red', fontWeight: 'bold' }}>⚠️ ¡Faltante / Bajo stock!</span>
+                  <td style={{ padding: '10px' }}>${prod.precio_venta ? prod.precio_venta.toFixed(2) : '0.00'}</td>
+                  
+                  {/* Stock actual con número exacto y color dinámico */}
+                  <td style={{ padding: '10px', fontWeight: 'bold', color: estaFaltante ? 'red' : 'green' }}>
+                    {prod.stock_actual} unidades
+                  </td>
+
+                  {/* Indicador visual con etiqueta flotante (tooltip) */}
+                  <td style={{ padding: '10px', textAlign: 'center' }}>
+                    {sinStock ? (
+                      <span 
+                        title="No hay stock suficiente" 
+                        style={{ cursor: 'help', fontSize: '18px' }}
+                      >
+                        ❌
+                      </span>
+                    ) : estaFaltante ? (
+                      <span 
+                        title="Se requiere más stock (por debajo del mínimo)" 
+                        style={{ cursor: 'help', fontSize: '18px' }}
+                      >
+                        ⚠️
+                      </span>
                     ) : (
-                      <span style={{ color: 'green' }}>✔ Stock suficiente</span>
+                      <span 
+                        title="Stock suficiente dentro del límite" 
+                        style={{ cursor: 'help', fontSize: '18px', color: 'green' }}
+                      >
+                        ✅
+                      </span>
                     )}
                   </td>
                 </tr>
