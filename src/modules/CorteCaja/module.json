@@ -1,0 +1,6 @@
+{
+  "nombre": "Corte de Caja",
+  "descripcion": "Consulta los tickets del día, el dinero en caja y el acumulado de productos vendidos.",
+  "icono": "ti-bar-chart",
+  "version": "1.0.0"
+}
