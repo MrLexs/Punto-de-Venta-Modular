@@ -14,6 +14,12 @@ export default function App() {
   const [vista, setVista] = useState('galeria'); // 'galeria' | 'administracion' | id de un modulo
   const [cargando, setCargando] = useState(true);
 
+  // Estado para la personalización de la marca (colores y logo de la tienda)
+  const [config, setConfig] = useState({
+    colorPrimario: '#007bff', // Azul por defecto
+    logoUrl: '' // Imagen de fondo transparente opcional
+  });
+
   async function recargar(usuarioActual) {
     const [catalogoNuevo, activosNuevo] = await Promise.all([
       window.pos.obtenerCatalogoModulos(),
@@ -21,6 +27,12 @@ export default function App() {
     ]);
     setCatalogo(catalogoNuevo);
     setActivos(activosNuevo);
+
+    // Si en el futuro tienes una función para obtener config de la BD, la puedes llamar aquí:
+    // try {
+    //   const configBD = await window.pos.obtenerConfiguracion();
+    //   if (configBD) setConfig(configBD);
+    // } catch (e) { /* usar valores por defecto */ }
 
     if (usuarioActual) {
       const mapa = await window.pos.admin.mapaDeAccesos(
@@ -60,8 +72,6 @@ export default function App() {
   if (!usuario) return <PantallaLogin onIniciarSesion={manejarInicioSesion} />;
   if (cargando) return <div className="cargando">Cargando...</div>;
 
-  // Un modulo activo solo aparece en la barra lateral si el ROL del usuario tiene
-  // al menos nivel 'ver'. Esto es lo que hace que dos empleados vean menus distintos.
   const modulosVisibles = catalogo.filter(
     (m) => activos.includes(m.id) && accesos[m.id] && accesos[m.id] !== 'ninguno'
   );
@@ -70,9 +80,20 @@ export default function App() {
   const nivelVistaActual = accesos[vista] || 'ninguno';
 
   return (
-    <div className="app-shell">
+    <div 
+      className="app-shell"
+      style={{
+        // Inyectamos la variable CSS dinámica para que toda la app use el color del cliente
+        '--color-primario': config.colorPrimario,
+        backgroundImage: config.logoUrl ? `url(${config.logoUrl})` : 'none',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'bottom 20px right 20px',
+        backgroundSize: '150px',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       <aside className="barra-lateral">
-        <div className="marca">POS Modular</div>
+        <div className="marca" style={{ color: config.colorPrimario }}>POS Modular</div>
 
         <button
           className={`item-nav ${vista === 'galeria' ? 'activo' : ''}`}
@@ -104,6 +125,7 @@ export default function App() {
             >
               <i className="ti ti-settings" /> Administración
             </button>
+            {/* Espacio reservado para cuando crees el módulo de Personalización */}
           </>
         ) : null}
 

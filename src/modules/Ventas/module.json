@@ -1,0 +1,6 @@
+{
+  "nombre": "Caja y Ventas",
+  "descripcion": "Realiza cobros rápidos, escanea códigos de barras y descuenta inventario automáticamente.",
+  "icono": "ti-shopping-cart",
+  "version": "1.0.0"
+}
