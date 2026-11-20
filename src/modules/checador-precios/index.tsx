@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNivelAcceso } from '../../core/ContextoAcceso.jsx';
+import { useNivelAcceso } from '../../core/ContextoAcceso';
 
 export default function ChecadorPrecios() {
   // 'ver' o 'editar', segun el rol del usuario que inicio sesion.
@@ -94,7 +94,7 @@ export default function ChecadorPrecios() {
           ))}
           {productos.length === 0 && (
             <tr>
-              <td colSpan="3">No se encontraron productos.</td>
+              <td colSpan={3}>No se encontraron productos.</td>
             </tr>
           )}
         </tbody>

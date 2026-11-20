@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNivelAcceso } from '../../core/ContextoAcceso.jsx';
+import { useNivelAcceso } from '../../core/ContextoAcceso';
 
 // Este es el componente que se muestra cuando el usuario abre tu modulo
 // desde la barra lateral. Recibe la app en modo React "normal": puedes

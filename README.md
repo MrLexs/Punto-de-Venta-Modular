@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+HEAD
 # POS Modular
 =======
 
@@ -65,7 +65,7 @@ El núcleo ahora pide iniciar sesión con un PIN numérico antes de mostrar nada
 Dentro de cualquier `index.jsx` de un módulo:
 
 ```jsx
-import { useNivelAcceso } from '../../core/ContextoAcceso.jsx';
+import { useNivelAcceso } from '../../core/ContextoAcceso';
 
 export default function MiModulo() {
   const nivel = useNivelAcceso(); // 'ver' o 'editar'

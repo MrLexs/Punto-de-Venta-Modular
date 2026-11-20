@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Galeria from './Galeria.jsx';
-import Administracion from './Administracion.jsx';
-import PantallaLogin from './PantallaLogin.jsx';
-import { ProveedorAcceso } from './ContextoAcceso.jsx';
+import Galeria from './Galeria';
+import Administracion from './Administracion';
+import PantallaLogin from './PantallaLogin';
+import { ProveedorAcceso } from './ContextoAcceso';
 import { componentesPorModulo } from './registroModulos.js';
 
 export default function App() {
@@ -90,7 +90,7 @@ export default function App() {
         backgroundPosition: 'bottom 20px right 20px',
         backgroundSize: '150px',
         backgroundAttachment: 'fixed'
-      }}
+      }as React.CSSProperties}
     >
       <aside className="barra-lateral">
         <div className="marca" style={{ color: config.colorPrimario }}>POS Modular</div>
