@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNivelAcceso } from '../../core/ContextoAcceso.jsx';
+import { useNivelAcceso } from '../../core/ContextoAcceso';
 
 export default function ModuloVentas() {
   const nivel = useNivelAcceso();
