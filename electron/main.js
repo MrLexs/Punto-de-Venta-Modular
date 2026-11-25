@@ -25,6 +25,16 @@ const esDev = !app.isPackaged;
 
 let ventanaPrincipal;
 
+// Usuario que inicio sesion. Vive en el proceso principal para que
+// la interfaz no pueda "inventarse" que es administrador.
+let usuarioActual = null;
+
+function exigirAdmin() {
+  if (usuarioActual === null || usuarioActual.es_admin !== 1) {
+    throw new Error('No autorizado: se requiere rol de administrador');
+  }
+}
+
 function crearVentana() {
   ventanaPrincipal = new BrowserWindow({
     width: 1200,
@@ -69,29 +79,66 @@ ipcMain.handle('modulos:catalogo', () => listarModulosDisponibles());
 ipcMain.handle('modulos:activos', () => listarModulosActivos());
 
 // Activa un modulo: corre su schema.sql (si existe) y lo marca como activo
-ipcMain.handle('modulos:activar', (_evento, idModulo) => activarModulo(idModulo));
+ipcMain.handle('modulos:activar', (_evento, idModulo) => {
+  exigirAdmin();
+  return activarModulo(idModulo);
+});
 
 // Desactiva un modulo (no borra sus datos, solo lo oculta del dashboard)
-ipcMain.handle('modulos:desactivar', (_evento, idModulo) => desactivarModulo(idModulo));
+ipcMain.handle('modulos:desactivar', (_evento, idModulo) => {
+  exigirAdmin();
+  return desactivarModulo(idModulo);
+});
 
-// Consulta generica de solo lectura/escritura para que cada modulo use su propia tabla
-ipcMain.handle('db:consulta', (_evento, { sql, params }) => ejecutarConsulta(sql, params));
+// Consulta generica para que cada modulo use su propia tabla.
+// Bloquea las tablas del sistema y los comandos peligrosos.
+ipcMain.handle('db:consulta', (_evento, { sql, params }) => {
+  if (usuarioActual === null) {
+    throw new Error('Debes iniciar sesion');
+  }
+
+  const texto = sql.toLowerCase();
+  const prohibidas = ['usuarios', 'roles', 'permisos', 'drop ', 'alter ', 'pragma', 'attach', 'sqlite_master'];
+  for (let i = 0; i < prohibidas.length; i++) {
+    if (texto.includes(prohibidas[i])) {
+      throw new Error('Consulta no permitida');
+    }
+  }
+  return ejecutarConsulta(sql, params);
+});
 
 // --- Autenticacion ---
-ipcMain.handle('auth:iniciarSesion', (_evento, pin) => iniciarSesionPorPin(pin));
+// Guardamos el usuario que inicio sesion en el proceso principal
+ipcMain.handle('auth:iniciarSesion', (_evento, pin) => {
+  const resultado = iniciarSesionPorPin(pin);
+  if (resultado.ok) {
+    usuarioActual = resultado.usuario;
+  } else {
+    usuarioActual = null;
+  }
+  return resultado;
+});
 
 // --- Administracion: usuarios, roles y permisos ---
 ipcMain.handle('admin:listarUsuarios', () => listarUsuarios());
-ipcMain.handle('admin:crearUsuario', (_evento, datos) => crearUsuario(datos));
-ipcMain.handle('admin:cambiarActivoUsuario', (_evento, { idUsuario, activo }) =>
-  cambiarActivoUsuario(idUsuario, activo)
-);
+ipcMain.handle('admin:crearUsuario', (_evento, datos) => {
+  exigirAdmin();
+  return crearUsuario(datos);
+});
+ipcMain.handle('admin:cambiarActivoUsuario', (_evento, { idUsuario, activo }) => {
+  exigirAdmin();
+  return cambiarActivoUsuario(idUsuario, activo);
+});
 ipcMain.handle('admin:listarRoles', () => listarRoles());
-ipcMain.handle('admin:crearRol', (_evento, nombre) => crearRol(nombre));
+ipcMain.handle('admin:crearRol', (_evento, nombre) => {
+  exigirAdmin();
+  return crearRol(nombre);
+});
 ipcMain.handle('admin:listarPermisosDeRol', (_evento, idRol) => listarPermisosDeRol(idRol));
-ipcMain.handle('admin:asignarPermiso', (_evento, { idRol, idModulo, nivel }) =>
-  asignarPermiso(idRol, idModulo, nivel)
-);
+ipcMain.handle('admin:asignarPermiso', (_evento, { idRol, idModulo, nivel }) => {
+  exigirAdmin();
+  return asignarPermiso(idRol, idModulo, nivel);
+});
 ipcMain.handle('admin:mapaDeAccesos', (_evento, { idRol, idsModulos }) =>
   mapaDeAccesos(idRol, idsModulos)
 );
